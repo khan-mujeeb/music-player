@@ -1,60 +1,99 @@
 package com.example.mmplayer.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.mmplayer.R
+import androidx.fragment.app.Fragment
+import com.example.mmplayer.adapter.MusicAdapter
+import com.example.mmplayer.databinding.FragmentHomeBinding
+import com.example.mmplayer.modle.Music
+import java.io.File
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var binding: FragmentHomeBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(layoutInflater)
+
+        var list = listOfMusic()
+//        println("mujeeb ${list[0].title}")
+        val adapter = MusicAdapter(requireContext(), list)
+        binding!!.homeRc.adapter = adapter
+
+        return binding!!.root
+
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun listOfMusic(): ArrayList<Music> {
+        val tempList = ArrayList<Music>()
+
+        val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
+        val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.DATE_ADDED,
+            MediaStore.Audio.Media.DATA
+        )
+
+        val cursor = requireContext().contentResolver.query(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            null,
+            MediaStore.Audio.Media.DATE_ADDED + " DESC",
+            null
+        )
+
+        if(cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    val idColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
+                    val titleColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
+                    val albumColumnsIndex = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
+                    val artistColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
+                    val pathColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
+                    val durationColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
+
+
+
+                    if (idColumnIndex >= 0 && titleColumnIndex >= 0) {
+                        val music = Music(
+                            id = cursor.getString(idColumnIndex),
+                            title = cursor.getString(titleColumnIndex),
+                            album = cursor.getString(albumColumnsIndex),
+                            artist = cursor.getString(artistColumnIndex),
+                            path = cursor.getString(pathColumnIndex),
+                            duration = cursor.getString(durationColumnIndex)
+                        )
+                        val file = File(music.path)
+                        if (file.exists()) {
+                            tempList.add(music)
+                        }
+                    }
+                }while (cursor.moveToNext())
+                cursor.close()
             }
+        }
+
+        return tempList
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (binding!=null) {
+            binding = null
+        }
+    }
+
 }

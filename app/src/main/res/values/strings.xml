@@ -5,4 +5,7 @@
     <string name="home">Home</string>
     <string name="favorite">Favorite</string>
     <string name="total_songs">Total Songs</string>
+    <string name="length">length</string>
+    <string name="artist">artist</string>
+    <string name="song_name">song name</string>
 </resources>
