@@ -6,5 +6,6 @@ data class Music(
     val album: String = "",
     val artist: String = "",
     val path: String = "",
-    val duration: String = ""
+    val duration: String = "",
+    val url: String = ""
 )

@@ -1,5 +1,7 @@
 package com.example.mmplayer.home
 
+import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import com.example.mmplayer.adapter.MusicAdapter
 import com.example.mmplayer.databinding.FragmentHomeBinding
 import com.example.mmplayer.modle.Music
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
 
@@ -23,7 +26,6 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(layoutInflater)
 
         var list = listOfMusic()
-//        println("mujeeb ${list[0].title}")
         val adapter = MusicAdapter(requireContext(), list)
         binding!!.homeRc.adapter = adapter
 
@@ -32,6 +34,7 @@ class HomeFragment : Fragment() {
 
     }
 
+    @SuppressLint("Range")
     private fun listOfMusic(): ArrayList<Music> {
         val tempList = ArrayList<Music>()
 
@@ -43,7 +46,8 @@ class HomeFragment : Fragment() {
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.DATE_ADDED,
-            MediaStore.Audio.Media.DATA
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.ALBUM_ID
         )
 
         val cursor = requireContext().contentResolver.query(
@@ -64,7 +68,15 @@ class HomeFragment : Fragment() {
                     val artistColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
                     val pathColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
                     val durationColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
+                    val AlbumArt = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toString()
+                    val uri = Uri.parse("content://media/external/audio/albumart")
+                    val artUri = Uri.withAppendedPath(uri, AlbumArt).toString()
 
+                    val durationInMilis = cursor.getLong(durationColumnIndex)
+                    val min = TimeUnit.MINUTES.convert(durationInMilis, TimeUnit.MILLISECONDS)
+                    val sec = TimeUnit.SECONDS.convert(durationInMilis, TimeUnit.MILLISECONDS) -
+                            min * TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES)
+                    val duration = String.format("%02d:%02d", min, sec)
 
 
                     if (idColumnIndex >= 0 && titleColumnIndex >= 0) {
@@ -74,7 +86,8 @@ class HomeFragment : Fragment() {
                             album = cursor.getString(albumColumnsIndex),
                             artist = cursor.getString(artistColumnIndex),
                             path = cursor.getString(pathColumnIndex),
-                            duration = cursor.getString(durationColumnIndex)
+                            duration = duration,
+                            url = artUri
                         )
                         val file = File(music.path)
                         if (file.exists()) {

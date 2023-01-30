@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.mmplayer.databinding.MusicLtemViewBinding
 import com.example.mmplayer.modle.Music
 
@@ -24,6 +25,9 @@ class MusicAdapter(private val context: Context, private val list: ArrayList<Mus
         holder.musicName.text = list[position].title
         holder.artistName.text = list[position].artist
         holder.length.text = list[position].duration
+        Glide.with(context)
+            .load(list[position].url)
+            .into(holder.albumArt)
     }
 
     override fun getItemCount(): Int {
