@@ -17,9 +17,21 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:textSize="22sp"
         android:layout_marginTop="20dp"
         android:layout_below="@id/down"
         android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:singleLine="true"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/title"
+        android:id="@+id/artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -27,7 +39,7 @@
         android:id="@+id/album_art"
         android:layout_width="150dp"
         android:layout_height="330dp"
-        android:layout_below="@id/title"
+        android:layout_below="@id/artist"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="20dp"
@@ -39,15 +51,41 @@
         android:layout_marginBottom="20dp"
         android:src="@drawable/ic_launcher_foreground" />
 
-    <androidx.appcompat.widget.AppCompatSeekBar
-        android:id="@+id/seekbar"
+    <LinearLayout
+        android:gravity="center_vertical"
         android:layout_below="@id/album_art"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:id="@+id/seekbar_layout"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/white"
+            android:id="@+id/start"
+            android:text="00:00"
+            android:textSize="13sp"
+            android:layout_width="0dp"
+            android:layout_weight="1.25"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="0dp"
+            android:layout_weight="7.5"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textSize="13sp"
+            android:textColor="@color/white"
+            android:id="@+id/end"
+            android:text="00:00"
+            android:layout_width="0dp"
+            android:layout_weight="1.25"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_marginTop="20dp"
-        android:layout_below="@id/seekbar"
+        android:layout_below="@id/seekbar_layout"
         android:id="@+id/tool_bar"
         android:orientation="horizontal"
         android:layout_width="match_parent"
