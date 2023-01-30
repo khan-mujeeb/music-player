@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="2dp"
+    android:layout_marginTop="0.5dp"
+    android:background="@color/background"
     android:layout_height="wrap_content">
     <com.google.android.material.imageview.ShapeableImageView
         android:scaleType="centerCrop"
@@ -18,6 +18,9 @@
 
     <TextView
 
+        android:textColor="@color/text"
+        android:textStyle="bold"
+        android:textSize="16sp"
         android:singleLine="true"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/album_art_list"
@@ -27,6 +30,8 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:textColor="@color/text"
+        android:textSize="14sp"
         android:singleLine="true"
         android:layout_marginTop="5dp"
         android:layout_marginStart="10dp"
@@ -39,6 +44,7 @@
 
 
     <TextView
+        android:textColor="@color/text"
         android:singleLine="true"
         android:gravity="center_vertical"
         android:layout_alignParentTop="true"
