@@ -6,10 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:padding="10dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:fontFamily="@font/lobster"
+            android:textStyle="bold"
+            android:textSize="29sp"
+            android:id="@+id/wish"
+            android:text="Good Morning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 
 
     <fragment
+        android:layout_below="@id/appbar"
         android:layout_above="@id/bottom_navigation"
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"

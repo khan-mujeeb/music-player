@@ -3,10 +3,13 @@ package com.example.mmplayer
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.icu.util.Calendar
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
@@ -22,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var binding: ActivityMainBinding? = null
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         requestSoragePermissions()
         MusicList = listOfMusic()
@@ -29,7 +33,26 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         init()
+        val c = Calendar.getInstance()
 
+        val hour = c.get(Calendar.HOUR_OF_DAY)
+
+        when(hour) {
+            in 5..12 -> {
+                setGrettings("\uD83C\uDF05 Good Morning...")
+            }
+            in 12..18 -> {
+                setGrettings("☀️Good AfterNoon...")
+            }
+            else ->{
+                setGrettings("\uD83C\uDF03 Good Evening...")
+            }
+        }
+
+    }
+
+    private fun setGrettings(s: String) {
+        binding!!.wish.text = s
     }
 
     private fun requestSoragePermissions() {
