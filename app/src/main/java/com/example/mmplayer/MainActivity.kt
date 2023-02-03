@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             in 5..12 -> {
                 setGrettings("\uD83C\uDF05 Good Morning...")
             }
-            in 12..18 -> {
+            in 12..16 -> {
                 setGrettings("☀️Good AfterNoon...")
             }
             else ->{

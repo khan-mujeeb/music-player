@@ -4,7 +4,10 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.GradientDrawable
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
@@ -39,8 +42,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
         startService(intent)
 
 
-
-        println("mujeeb ka class $myClass and its index $index")
+//
+//        println("mujeeb ka class $myClass and its index $index")
 
 //        play pause button
         binding!!.playPause.setOnClickListener {
@@ -76,7 +79,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
         when(myClass) {
             "HomeActivity" -> {
                 musicListPA = MusicList
-                println("meghu kkrh")
                 setMusicData(index)
 
 
@@ -122,12 +124,28 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
     private fun setMusicData(index: Int) {
 
         val path = musicListPA[index].url
-//        val bitmap: Bitmap = BitmapFactory.decodeFile(path)
-//        val pallet = createPaletteSync(bitmap)
-////        binding!!.playerBg.apply {
-////            val color = pallet.getDarkVibrantColor(defaultColor)
-////            setBackgroundColor(color)
-////        }
+        val uri = Uri.parse(path)
+        val inputStream = this.contentResolver.openInputStream(uri)
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+
+            val pallet = createPaletteSync(bitmap)
+            binding!!.playerBg.apply {
+                val color1 = pallet.getDarkVibrantColor(defaultColor)
+                val color2 = pallet.getLightVibrantColor(defaultColor)
+                val color3 = pallet.getMutedColor(defaultColor)
+
+                val gradientDrawable = GradientDrawable(
+                    GradientDrawable.Orientation.BL_TR,
+                    intArrayOf(
+                        color1,
+                        color2,
+                        color3
+                    )
+                )
+
+                background = gradientDrawable
+            }
+
         binding!!.title.text = musicListPA[index].title
         binding!!.artist.text = musicListPA[index].artist
         binding!!.end.text = musicListPA[index].duration
@@ -142,13 +160,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
     // Generate palette synchronously and return it
     fun createPaletteSync(bitmap: Bitmap): Palette = Palette.from(bitmap).generate()
 
-    // Generate palette asynchronously and use it on a different
-// thread using onGenerated()
-    fun createPaletteAsync(bitmap: Bitmap) {
-        Palette.from(bitmap).generate { palette ->
-            // Use generated instance
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -166,6 +177,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
     override fun onServiceDisconnected(name: ComponentName?) {
         musicService = null
     }
+
+
 
 
 }
