@@ -29,6 +29,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         requestSoragePermissions()
         MusicList = listOfMusic()
+        MusicList.add(
+            Music(
+                "","","","","","",""
+            )
+        )
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
@@ -126,6 +131,7 @@ class MainActivity : AppCompatActivity() {
                     val duration = String.format("%02d:%02d", min, sec)
 
 
+
                     if (idColumnIndex >= 0 && titleColumnIndex >= 0) {
                         val music = Music(
                             id = cursor.getString(idColumnIndex),
@@ -138,7 +144,8 @@ class MainActivity : AppCompatActivity() {
                         )
                         val file = File(music.path)
                         if (file.exists()) {
-                            tempList.add(music)
+                            if (durationInMilis.toInt() > 30000)
+                                tempList.add(music)
                         }
                     }
                 }while (cursor.moveToNext())

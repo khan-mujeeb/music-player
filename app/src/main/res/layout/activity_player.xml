@@ -17,6 +17,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:scaleType="centerCrop"
+        android:id="@+id/album_art"
+        android:layout_width="150dp"
+        android:layout_height="330dp"
+        android:layout_below="@id/down"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="2dp"
+        app:shapeAppearanceOverlay="@style/image_style"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_launcher_foreground" />
+
+
     <TextView
         android:fontFamily="@font/opensans_bold"
         android:text="@string/song_name"
@@ -24,7 +43,7 @@
         android:singleLine="true"
         android:textSize="26sp"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/down"
+        android:layout_below="@id/album_art"
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -40,26 +59,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:scaleType="centerCrop"
-        android:id="@+id/album_art"
-        android:layout_width="150dp"
-        android:layout_height="330dp"
-        android:layout_below="@id/artist"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        app:strokeColor="@color/white"
-        app:strokeWidth="2dp"
-        app:shapeAppearanceOverlay="@style/image_style"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/ic_launcher_foreground" />
+
+
 
     <LinearLayout
         android:gravity="center_vertical"
-        android:layout_below="@id/album_art"
+        android:layout_below="@id/artist"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:id="@+id/seekbar_layout"
@@ -120,6 +125,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:gravity="center_vertical"
         android:layout_marginTop="30dp"
         android:layout_below="@id/tool_bar"
         android:id="@+id/functions"
@@ -127,6 +133,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+
             android:id="@+id/previous"
             android:src="@drawable/ic_round_skip_previous_24"
             android:layout_weight="1"

@@ -11,7 +11,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:id="@+id/album_art_list"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@drawable/ic_baseline_music_note_24"
         app:shapeAppearanceOverlay="@style/image_style"
         android:layout_width="50dp"
         android:layout_height="50dp"/>

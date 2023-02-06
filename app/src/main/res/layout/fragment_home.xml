@@ -7,6 +7,7 @@
     tools:context=".home.HomeFragment">
 
     <TextView
+        android:textColor="@color/text"
         android:layout_marginStart="8dp"
         android:id="@+id/total_songs"
         android:text="@string/total_songs"
@@ -14,7 +15,9 @@
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:text=" 17 Songs"
+        android:id="@+id/no_of_songs"
+        android:textColor="@color/text"
+        android:text=" 0 Songs"
         android:layout_toRightOf="@id/total_songs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

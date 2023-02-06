@@ -9,6 +9,7 @@ import com.example.mmplayer.MainActivity.Companion.MusicList
 import com.example.mmplayer.adapter.MusicAdapter
 import com.example.mmplayer.databinding.FragmentHomeBinding
 
+
 class HomeFragment : Fragment() {
 
     private var binding: FragmentHomeBinding? = null
@@ -21,6 +22,9 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(layoutInflater)
 
         var list = MusicList
+
+        binding!!.noOfSongs.text = " ${list.size.toString()}"
+
         val adapter = MusicAdapter(requireContext(), list)
         binding!!.homeRc.adapter = adapter
 
