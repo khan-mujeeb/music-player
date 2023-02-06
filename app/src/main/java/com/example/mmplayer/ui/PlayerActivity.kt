@@ -10,6 +10,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
@@ -125,26 +126,13 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
 
         val path = musicListPA[index].url
         val uri = Uri.parse(path)
-        val inputStream = this.contentResolver.openInputStream(uri)
-        val bitmap = BitmapFactory.decodeStream(inputStream)
 
-            val pallet = createPaletteSync(bitmap)
-            binding!!.playerBg.apply {
-                val color1 = pallet.getDarkVibrantColor(defaultColor)
-                val color2 = pallet.getLightVibrantColor(defaultColor)
-                val color3 = pallet.getMutedColor(defaultColor)
-
-                val gradientDrawable = GradientDrawable(
-                    GradientDrawable.Orientation.BL_TR,
-                    intArrayOf(
-                        color1,
-                        color2,
-                        color3
-                    )
-                )
-
-                background = gradientDrawable
-            }
+        try {
+            setBackgroundColor(uri)
+        }catch (e: Exception) {
+           binding!!.albumArt.setBackgroundResource(R.drawable.ic_baseline_music_note_24)
+            Toast.makeText(this, "album art not found", Toast.LENGTH_SHORT).show()
+        }
 
         binding!!.title.text = musicListPA[index].title
         binding!!.artist.text = musicListPA[index].artist
@@ -156,6 +144,30 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
             .into(binding!!.albumArt)
 
     }
+
+    private fun setBackgroundColor(uri: Uri?) {
+        val inputStream = this.contentResolver.openInputStream(uri!!)
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+
+        val pallet = createPaletteSync(bitmap)
+        binding!!.playerBg.apply {
+            val color1 = pallet.getDarkVibrantColor(defaultColor)
+            val color2 = pallet.getLightVibrantColor(defaultColor)
+            val color3 = pallet.getMutedColor(defaultColor)
+
+            val gradientDrawable = GradientDrawable(
+                GradientDrawable.Orientation.BL_TR,
+                intArrayOf(
+                    color1,
+                    color2,
+                    color3
+                )
+            )
+
+            background = gradientDrawable
+        }
+    }
+
 
     // Generate palette synchronously and return it
     fun createPaletteSync(bitmap: Bitmap): Palette = Palette.from(bitmap).generate()
@@ -169,7 +181,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        var binder = service as MusicService.MyBinder
+        val binder = service as MusicService.MyBinder
         musicService = binder.currentService()
         createMediaPlayer(index)
     }

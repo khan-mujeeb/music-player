@@ -142,6 +142,7 @@ class MainActivity : AppCompatActivity() {
                             duration = duration,
                             url = artUri
                         )
+                        println("mujeeb khan ${cursor.getString(pathColumnIndex)}")
                         val file = File(music.path)
                         if (file.exists()) {
                             if (durationInMilis.toInt() > 30000)
