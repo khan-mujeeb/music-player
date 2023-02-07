@@ -40,9 +40,7 @@ class MainActivity : AppCompatActivity() {
         init()
         val c = Calendar.getInstance()
 
-        val hour = c.get(Calendar.HOUR_OF_DAY)
-
-        when(hour) {
+        when(c.get(Calendar.HOUR_OF_DAY)) {
             in 5..12 -> {
                 setGrettings("\uD83C\uDF05 Good Morning...")
             }
@@ -142,7 +140,7 @@ class MainActivity : AppCompatActivity() {
                             duration = duration,
                             url = artUri
                         )
-                        println("mujeeb khan ${cursor.getString(pathColumnIndex)}")
+
                         val file = File(music.path)
                         if (file.exists()) {
                             if (durationInMilis.toInt() > 30000)

@@ -22,12 +22,16 @@ import com.example.mmplayer.modle.Music
 import com.example.mmplayer.services.MusicService
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection {
+    companion object {
+        lateinit var musicListPA: ArrayList<Music>
+         var index: Int = 0
+    }
 
     var binding: ActivityPlayerBinding? = null
-    private lateinit var musicListPA: ArrayList<Music>
+
     private var isPlaying: Boolean = false
     var musicService: MusicService? = null
-    private  var index: Int = 0
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,22 +39,21 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
         super.onCreate(savedInstanceState)
         setContentView(binding!!.root)
 
+        // getting data from intent
         val myClass = intent.getStringExtra("class")
         index = intent.getIntExtra("index", 0)
 
+        // background services
         val intent = Intent(this, MusicService::class.java)
-        bindService(intent, this, BIND_AUTO_CREATE )
+        bindService(intent, this, BIND_AUTO_CREATE)
         startService(intent)
 
-
-//
-//        println("mujeeb ka class $myClass and its index $index")
 
 //        play pause button
         binding!!.playPause.setOnClickListener {
             if (isPlaying) {
                 pause()
-            }else {
+            } else {
                 play()
             }
         }
@@ -59,25 +62,25 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
         binding!!.next.setOnClickListener {
 
             // if current music is last in list
-            if(index == musicListPA.size - 1) {
+            if (index == musicListPA.size - 1) {
                 index = 0
-            }else {
-               index++
+            } else {
+                index++
             }
             createMediaPlayer(index)
         }
 
         // next button
         binding!!.previous.setOnClickListener {
-            if(index == 0) {
+            if (index == 0) {
                 index = musicListPA.size - 1
-            }else {
+            } else {
                 index--
             }
             createMediaPlayer(index)
         }
 
-        when(myClass) {
+        when (myClass) {
             "HomeActivity" -> {
                 musicListPA = MusicList
                 setMusicData(index)
@@ -89,7 +92,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
 
     private fun createMediaPlayer(index: Int) {
         try {
-            if(musicService!!.mediaPlayer == null) {
+            if (musicService!!.mediaPlayer == null) {
                 musicService!!.mediaPlayer = MediaPlayer()
             }
 
@@ -101,7 +104,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
             musicService!!.mediaPlayer!!.prepare()
             musicService!!.mediaPlayer!!.start()
             binding!!.playPause.setImageResource(R.drawable.ic_baseline_pause_circle_filled_24)
-        }catch (e: java.lang.Exception) {
+        } catch (e: java.lang.Exception) {
             return
         }
     }
@@ -111,16 +114,18 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
         binding!!.playPause.setImageResource(R.drawable.ic_baseline_pause_circle_filled_24)
         musicService!!.mediaPlayer!!.start()
     }
+
     private fun pause() {
         isPlaying = false
         binding!!.playPause.setImageResource(R.drawable.ic_baseline_play_circle_24)
         musicService!!.mediaPlayer!!.pause()
     }
 
-    private val defaultColor: Int get() = ContextCompat.getColor(
-        this,
-        R.color.dark_purple
-    )
+    private val defaultColor: Int
+        get() = ContextCompat.getColor(
+            this,
+            R.color.dark_purple
+        )
 
     private fun setMusicData(index: Int) {
 
@@ -129,8 +134,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
 
         try {
             setBackgroundColor(uri)
-        }catch (e: Exception) {
-           binding!!.albumArt.setBackgroundResource(R.drawable.ic_baseline_music_note_24)
+        } catch (e: Exception) {
+            binding!!.albumArt.setBackgroundResource(R.drawable.ic_baseline_music_note_24)
             Toast.makeText(this, "album art not found", Toast.LENGTH_SHORT).show()
         }
 
@@ -175,7 +180,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (binding!=null) {
+        if (binding != null) {
             binding = null
         }
     }
@@ -184,13 +189,12 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection {
         val binder = service as MusicService.MyBinder
         musicService = binder.currentService()
         createMediaPlayer(index)
+        musicService!!.showNotification()
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
         musicService = null
     }
-
-
 
 
 }
