@@ -38,8 +38,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         init()
+
+
+
         val c = Calendar.getInstance()
 
+        
         when(c.get(Calendar.HOUR_OF_DAY)) {
             in 5..12 -> {
                 setGrettings("\uD83C\uDF05 Good Morning...")
